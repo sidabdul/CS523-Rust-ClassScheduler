@@ -103,7 +103,19 @@ struct Schedule {
     classes: Vec<Class>,
 }
 
-
+fn help() {
+    println!(
+        r#"Commands:
+ add-class <CODE> <TITLE...>
+ add-meeting <CODE> <DAY> <START> <END> <LOCATION...>
+ remove-class <CODE>
+ list
+ week
+ conflicts
+ help
+ quit"#
+    );
+}
 
 fn main() {
     println!("Hello, world!");
