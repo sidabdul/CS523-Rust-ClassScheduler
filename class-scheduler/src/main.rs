@@ -133,6 +133,17 @@ impl Schedule {
         });
         Ok(())
     }
+
+
+         fn find_class_mut(&mut self, code: &str) -> Option<&mut Class>{
+        self.classes
+            .iter_mut()
+            .find(|c| c.code.eq_ignore_ascii_case(code))
+    }
+
+
+
+
 }
 
 
