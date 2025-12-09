@@ -309,7 +309,7 @@ fn main() {
                 let code = match it.next() {
                     Some(s) => s,
                     None => {
-                        eprintln!("Usage: add-class <CODE> <TITLE...>");
+                        eprintln!("Usage: Add-a-class <CODE> <TITLE...>");
                         continue;
                     }
                 };
@@ -395,5 +395,34 @@ fn main() {
             "Help" => sched.help(),
             _ => eprintln!("Unknown command (type 'Menu')."),
         }
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add_class() {
+        let mut s = Schedule::default();
+
+        // Add CS101 to test...
+        let ok = s.add_class("CS101", "Intro to CS");
+        assert!(ok.is_ok());
+        assert_eq!(s.classes.len(), 1);
+        assert_eq!(s.classes[0].code, "CS101");
+    }
+
+    #[test]
+    fn test_delete_class() {
+        let mut s = Schedule::default();
+
+        s.add_class("CS423", "Rust").unwrap();
+        assert_eq!(s.classes.len(), 1);
+
+        let removed_class = s.delete_class("CS423");
+        assert!(removed_class);
+        assert_eq!(s.classes.len(), 0);
     }
 }
