@@ -62,5 +62,20 @@ Sun:
 
 -> 
 
+I also included units tests with this program:
+
+sidali@fab05:/home/sidali/common/Desktop/Rust/Project/class-scheduler/src$ cargo test
+   Compiling class-scheduler v0.1.0 (/home/sidali/common/Desktop/Rust/Project/class-scheduler)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.08s
+     Running unittests src/main.rs (/home/sidali/common/Desktop/Rust/Project/class-scheduler/target/debug/deps/class_scheduler-da2d92ff691641de)
+
+running 2 tests
+test tests::test_add_class ... ok
+test tests::test_delete_class ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+sidali@fab05:/home/sidali/common/Desktop/Rust/Project/class-scheduler/src$ 
+
 
 
