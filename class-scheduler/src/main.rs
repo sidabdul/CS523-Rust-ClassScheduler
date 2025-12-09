@@ -264,15 +264,15 @@ impl Schedule {
 fn menu() {
     println!(
         r#"Commands:
- 1.Add-a-class <CODE> <TITLE...>
- 2.Add-a-meeting  <CODE> <DAY> <START> <END> <LOCATION...>
- 3.Remove-a-class <CODE>
- 4.List
- 5.Week
- 6.Conflicts
- 7.Menu
- 8.Help(For syntax help/format)
- 8.quit"#
+ Add-a-class <CODE> <TITLE...>
+ Add-a-meeting  <CODE> <DAY> <START> <END> <LOCATION...>
+ Remove-a-class <CODE>
+ List
+ Week
+ Conflicts
+ Menu
+ Help(For syntax help/format)
+ quit"#
     );
 }
 
