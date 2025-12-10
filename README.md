@@ -5,10 +5,10 @@ This program is a class scheduler tool. This tool would allow a student to regis
 
 # To build and run the program:
 
-1 In the src directory, type cargo build 
-2 Type cargo run. 
-3 Type Menu 
-4 Options should be displayed.
+1. In the src directory, type cargo build 
+2. Type cargo run. 
+3. Type Menu 
+4. Options should be displayed.
 
 ## Here is a test run of the program:
 
@@ -19,18 +19,20 @@ Compiling class-scheduler v0.1.0 (/home/sidali/common/Desktop/Rust/Project/class
 Running /home/sidali/common/Desktop/Rust/Project/class-scheduler/target/debug/class-scheduler 
 
 Welcome to the Class School Scheduler! Please Type 'Menu' to get started... 
-
 -> Menu 
 
-Add-a-class <CODE> <TITLE...>
- Add-a-meeting  <CODE> <DAY> <START> <END> <LOCATION...>
- Remove-a-class <CODE>
- List
- Week
- Conflicts
- Menu
- Help(For syntax help/format)
- quit"#
+Please select one of the options below:
+ 1. Add-a-class <2 Letter class CODE> + <TITLE...> For example .. CS423 Rust
+ 2. Add-a-meeting  <2 Letter class CODE> <DAY> <START> <END> <LOCATION...> For example .. CS101 Mon 08:30 10:30 EB101
+ 3. Remove-a-class <2 Letter class CODE> + <TITLE...>
+ 4. List
+ 5. Week
+ 6. Conflicts
+ 7. Menu
+ 8. Help(For syntax help/format)
+ 9. quit
+-> 
+
 
 -> Add-a-class CS101 Rust
 Added class: CS101 — Rust
