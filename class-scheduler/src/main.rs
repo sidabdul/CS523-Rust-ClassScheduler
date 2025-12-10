@@ -1,5 +1,5 @@
 /*
-* Sid A Rust Class scheduler
+* Sid A Rust Class Scheduler
 
    This Project is a class scheduler tool. This tool would allow a student to register for a term of classes same way we currently use Ban web here at Portland State to register for classes.
    I want to work on this assignment because I find it interesting how this system is currently in place on our schools website.
