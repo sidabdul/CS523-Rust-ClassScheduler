@@ -328,7 +328,7 @@ fn main() {
                 };
                 let title = it.collect::<Vec<_>>().join(" ").replace('_', " ");
                 if title.is_empty() {
-                    eprintln!("{}", "Title is required and can't be empty.".red());
+                    eprintln!("{}", "Title is required and it can't be empty.".red());
                     continue;
                 }
                 match sched.add_class(code, &title) {
