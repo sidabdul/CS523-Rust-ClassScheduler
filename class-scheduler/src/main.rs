@@ -300,7 +300,7 @@ fn main() {
 
         match cmd {
             "Menu" | "menu" => menu(),
-            "quit" | "exit" | "Quit" | "q" => {
+            "quit" | "exit" | "Quit" | "q" | "9" => {
                 println!("See you later! Bye!");
                 break;
             }
