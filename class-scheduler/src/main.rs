@@ -221,7 +221,7 @@ impl Schedule {
  7. Menu
  8. Help(For syntax help/format)
  9. quit"#
-                .cyan()
+                .green()
         );
     }
 
@@ -272,7 +272,7 @@ fn menu() {
  7. Menu
  8. Help(For syntax help/format)
  9. quit"#
-            .cyan()
+            .yellow()
     );
 }
 
