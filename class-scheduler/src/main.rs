@@ -1,15 +1,8 @@
-/*
-* Sid A Rust Class Scheduler
-
-   This Project is a class scheduler tool. This tool would allow a student to register for a term of classes same way we currently use Ban web here at Portland State to register for classes.
-   I want to work on this assignment because I find it interesting how this system is currently in place on our schools website.
-   The project touches on multiple areas: task scheduling, time-management , data analytics, and CLI uasge.
-*
-*
-*/
-
 use std::collections::BTreeMap;
 use std::io::{self, Write};
+
+use colored::*;
+use rand::Rng;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum Day {
@@ -157,15 +150,15 @@ impl Schedule {
 
     fn list(&self) {
         if self.classes.is_empty() {
-            println!("(no classes)");
+            println!("{}", "(no classes)".yellow());
             return;
         }
 
         for c in &self.classes {
-            println!("{} — {}", c.code, c.title);
+            println!("{} — {}", c.code.bold(), c.title);
 
             if c.meetings.is_empty() {
-                println!("  (no meetings!)");
+                println!("  {}", "(no meetings!)".yellow());
             } else {
                 for (i, m) in c.meetings.iter().enumerate() {
                     println!(
@@ -194,11 +187,11 @@ impl Schedule {
         }
 
         for d in Day::all() {
-            println!("{}:", d.short());
+            println!("{}:", d.short().blue().bold());
             let v = map.get_mut(&d).expect("day exists");
             v.sort_by_key(|(_, m)| (m.start, m.end));
             if v.is_empty() {
-                println!(" (none)");
+                println!(" {}", "(none)".yellow());
             } else {
                 for (c, m) in v.iter() {
                     println!(
@@ -213,11 +206,11 @@ impl Schedule {
             }
             println!();
         }
-
     }
 
     fn help(&self) {
         println!(
+            "{}",
             r#"Please select one of the options below:
  1. Add-a-class <2 Letter class CODE> + <TITLE...> For example .. CS423 Rust
  2. Add-a-meeting  <2 Letter class CODE> <DAY> <START> <END> <LOCATION...> For example .. CS101 Mon 08:30 10:30 EB101
@@ -228,6 +221,7 @@ impl Schedule {
  7. Menu
  8. Help(For syntax help/format)
  9. quit"#
+                .cyan()
         );
     }
 
@@ -241,28 +235,33 @@ impl Schedule {
                 if m1.overlaps(m2) {
                     found = true;
                     println!(
-                        "Conflict on {}: {} {}-{} @ {} <-> {} {}-{} @ {}",
-                        m1.day.short(),
-                        c1.code,
-                        m1.start.fmt(),
-                        m1.end.fmt(),
-                        m1.location,
-                        c2.code,
-                        m2.start.fmt(),
-                        m2.end.fmt(),
-                        m2.location
+                        "{}",
+                        format!(
+                            "Conflict on {}: {} {}-{} @ {} <-> {} {}-{} @ {}",
+                            m1.day.short(),
+                            c1.code,
+                            m1.start.fmt(),
+                            m1.end.fmt(),
+                            m1.location,
+                            c2.code,
+                            m2.start.fmt(),
+                            m2.end.fmt(),
+                            m2.location
+                        )
+                        .red()
                     );
                 }
             }
         }
         if !found {
-            println!("No conflicts found.");
+            println!("{}", "No conflicts found.".green());
         }
     }
 }
 
 fn menu() {
     println!(
+        "{}",
         r#"Please select one of the options below:
  1. Add-a-class <2 Letter class CODE> + <TITLE...> For example .. CS423 Rust
  2. Add-a-meeting  <2 Letter class CODE> <DAY> <START> <END> <LOCATION...> For example .. CS101 Mon 08:30 10:30 EB101
@@ -273,17 +272,28 @@ fn menu() {
  7. Menu
  8. Help(For syntax help/format)
  9. quit"#
+            .cyan()
     );
 }
 
 fn main() {
     let mut sched = Schedule::default();
-    println!("Welcome to the Class School Scheduler! Please Type 'Menu' to get started...");
+
+    // Generate a session ID for the user..
+    let mut randgen = rand::thread_rng();
+    let s_id: u32 = randgen.gen_range(1000..9999);
+
+    println!(
+        "{} {}{}",
+        "Welcome to the Class School Scheduler! Session ID:".green(),
+        s_id,
+        " — Type 'Menu' to get started...".green()
+    );
 
     loop {
         print!("-> ");
         if let Err(e) = io::stdout().flush() {
-            eprintln!("Failed to flush stdout: {e}");
+            eprintln!("{}", format!("Failed to flush stdout: {e}").red());
         }
 
         let mut line = String::new();
@@ -301,63 +311,81 @@ fn main() {
         match cmd {
             "Menu" | "menu" => menu(),
             "quit" | "exit" | "Quit" | "q" | "9" => {
-                println!("See you later! Bye!");
+                println!("{}", "See you later! Bye!".green());
                 break;
             }
             "Add-a-class" | "1" | "1. Add-a-class" => {
                 let code = match it.next() {
                     Some(s) => s,
                     None => {
-                        eprintln!("Usage: <2 Letter class CODE> + <TITLE...> For example .. CS423 Rust");
+                        eprintln!(
+                            "{}",
+                            "Usage: <2 Letter class CODE> + <TITLE...> For example .. CS423 Rust"
+                                .red()
+                        );
                         continue;
                     }
                 };
                 let title = it.collect::<Vec<_>>().join(" ").replace('_', " ");
                 if title.is_empty() {
-                    eprintln!("Title is required and can't be empty.");
+                    eprintln!("{}", "Title is required and can't be empty.".red());
                     continue;
                 }
                 match sched.add_class(code, &title) {
-                    Ok(_) => println!("Added class: {} — {}", code, title),
-                    Err(e) => eprintln!("{e}"),
+                    Ok(_) => println!(
+                        "{}",
+                        format!("Added class: {} — {}", code, title).green()
+                    ),
+                    Err(e) => eprintln!("{}", e.red()),
                 }
             }
             "Add-a-meeting" | "2. Add-a-meeting" | "2" => {
                 let code = match it.next() {
                     Some(s) => s,
                     None => {
-                        eprintln!("Usage: Add-a-meeting  <2 Letter class CODE> <DAY> <START> <END> <LOCATION...> For example .. CS101 Mon 08:30 10:30 EB101");
+                        eprintln!("{}", "Usage: Add-a-meeting  <2 Letter class CODE> <DAY> <START> <END> <LOCATION...> For example .. CS101 Mon 08:30 10:30 EB101".red());
                         continue;
                     }
                 };
                 let day = match it.next().and_then(Day::parse) {
                     Some(d) => d,
                     None => {
-                        eprintln!("Bad or missing day (use Mon/Tue/... or Monday/etc).");
+                        eprintln!(
+                            "{}",
+                            "Bad or missing day (use Mon/Tue/... or Monday/etc).".red()
+                        );
                         continue;
                     }
                 };
                 let start = match it.next().map(Time::parse) {
                     Some(Ok(t)) => t,
                     _ => {
-                        eprintln!("Bad or missing start time please use the format -> (use HH:MM).");
+                        eprintln!(
+                            "{}",
+                            "Bad or missing start time please use the format -> (use HH:MM)."
+                                .red()
+                        );
                         continue;
                     }
                 };
                 let end = match it.next().map(Time::parse) {
                     Some(Ok(t)) => t,
                     _ => {
-                        eprintln!("Bad or missing end time please use the format -> (use HH:MM).");
+                        eprintln!(
+                            "{}",
+                            "Bad or missing end time please use the format -> (use HH:MM)."
+                                .red()
+                        );
                         continue;
                     }
                 };
                 if end.0 <= start.0 {
-                    eprintln!("End time must be after start time.");
+                    eprintln!("{}", "End time must be after start time.".red());
                     continue;
                 }
                 let location = it.collect::<Vec<_>>().join(" ").replace('_', " ");
                 if location.is_empty() {
-                    eprintln!("Location must not be empty.");
+                    eprintln!("{}", "Location must not be empty.".red());
                     continue;
                 }
 
@@ -369,30 +397,30 @@ fn main() {
                         location,
                     };
                     class.meetings.push(m);
-                    println!("Added meeting to {}.", class.code);
+                    println!("{}", format!("Added meeting to {}.", class.code).green());
                 } else {
-                    eprintln!("No such class: {code}");
+                    eprintln!("{}", format!("No such class: {code}").red());
                 }
             }
             "Remove-a-class" | "3. Remove-a-class" | "3" => {
                 let code = match it.next() {
                     Some(s) => s,
                     None => {
-                        eprintln!("Usage: Remove-a-class <CODE>");
+                        eprintln!("{}", "Usage: Remove-a-class <CODE>".red());
                         continue;
                     }
                 };
                 if sched.delete_class(code) {
-                    println!("Removed '{code}'");
+                    println!("{}", format!("Removed '{code}'").green());
                 } else {
-                    eprintln!("No such class: {code}");
+                    eprintln!("{}", format!("No such class: {code}").red());
                 }
             }
             "List" | "4. List" | "4" => sched.list(),
             "Week" | "5. Week" | "5" => sched.week(),
             "Conflicts" | "6. Conflicts" | "6" => sched.conflicts(),
             "Help" | "8. Help" | "8" | "help" => sched.help(),
-            _ => eprintln!("Unknown command (type 'Menu')."),
+            _ => eprintln!("{}", "Unknown command (type 'Menu').".red()),
         }
     }
 }
